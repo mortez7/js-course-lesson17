@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="css/normalize.css" />
+    <link rel="stylesheet" href="css/style.css" />
+    <script src="js/main.js" defer></script>
+    <title>Document</title>
+  </head>
+  <body>
+    <div class="form-container">
+      <h2>Новый работник</h2>
+      <form>
+        <div class="form-group">
+          <div class="form-group">
+            <label for="first-name">Имя:</label>
+            <input type="text" id="first-name" name="first-name" required />
+          </div>
+
+          <label for="last-name">Фамилия:</label>
+          <input type="text" id="last-name" name="last-name" required />
+        </div>
+
+        <div class="form-group">
+          <label for="age">Возраст:</label>
+          <input type="text" id="age" name="age" required />
+        </div>
+
+        <div class="form-group">
+          <label for="organization">Организация:</label>
+          <input type="text" id="organization" name="organization" required />
+        </div>
+
+        <div class="form-group">
+          <label for="start-date">Дата приёма на работу:</label>
+          <input type="date" id="start-date" name="start-date" required />
+        </div>
+
+        <div class="form-group checkbox">
+          <input type="checkbox" id="has-child" name="agree" />
+          <label for="agree">Наличие детей</label>
+        </div>
+
+        <div class="form-group">
+          <label for="role">Должность:</label>
+          <select id="role" name="role" required>
+            <option value="">Выберите должность</option>
+            <option value="frontend">Frontend разработчик</option>
+            <option value="backend">Backend разработчик</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="qualification">Уровень квалификации:</label>
+          <select id="qualification" name="qualification" required>
+            <option value="">Выберите квалификацию</option>
+            <option value="junior">Junior</option>
+            <option value="middle">Middle</option>
+            <option value="senior">Senior</option>
+          </select>
+        </div>
+
+        <div class="form-button">
+          <button type="submit" id="save">Сохранить</button>
+        </div>
+      </form>
+    </div>
+
+    <div class="table-container">
+      <h2>Список работников</h2>
+      <table id="workers-table">
+        <thead>
+          <tr>
+            <th>Имя</th>
+            <th>Фамилия</th>
+            <th>Возраст</th>
+            <th>Есть дети</th>
+            <th>Организация</th>
+            <th>Дата приема на работу</th>
+            <th>Квалификация</th>
+            <th>Должность</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </body>
+</html>
