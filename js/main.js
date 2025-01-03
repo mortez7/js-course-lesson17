@@ -11,26 +11,7 @@ const roleSelect = document.querySelector("#role");
 const qualSelect = document.querySelector("#qualification");
 const saveBtn = document.querySelector("#save");
 const tableBody = document.querySelector("#workers-table tbody");
-let workers = [
-  // {
-  //   firstName: "Ivan",
-  //   lastName: "Sokolenko",
-  //   age: 26,
-  //   hasChild: false,
-  //   organization: "Google",
-  //   startDate: "20-01-2024",
-  //   qualification: "Junior",
-  // },
-  // {
-  //   firstName: "John",
-  //   lastName: "Doe",
-  //   age: 26,
-  //   hasChild: false,
-  //   organization: "Yandex",
-  //   startDate: "20-01-2024",
-  //   qualification: "Middle",
-  // },
-];
+let workers = [];
 
 class Worker {
   constructor(firstName, lastName, age, hasChild) {
@@ -45,7 +26,7 @@ class Worker {
   }
 
   set firstName(name) {
-    this.firstName = name;
+    this._firstName = name;
   }
 
   get lastName() {
@@ -53,7 +34,7 @@ class Worker {
   }
 
   set lastName(name) {
-    this.lastName = name;
+    this._lastName = name;
   }
 
   get age() {
@@ -61,7 +42,7 @@ class Worker {
   }
 
   set age(age) {
-    this.age = age;
+    this._age = age;
   }
 
   get hasChild() {
@@ -69,25 +50,23 @@ class Worker {
   }
 
   set hasChild(hasChild) {
-    this.hasChild = hasChild;
+    this._hasChild = hasChild;
+  }
+
+  deleteWorker(index) {
+    workers.splice(index, 1);
+    saveData();
+    renderTable();
   }
 }
 
 class FrontendDev extends Worker {
-  constructor(
-    firstName,
-    lastName,
-    age,
-    hasChild,
-    organization,
-    startDate,
-    qualification
-  ) {
+  constructor(firstName, lastName, age, hasChild, organization, startDate, qualification) {
     super(firstName, lastName, age, hasChild);
     this._organization = organization;
     this._startDate = startDate;
-    this._qualification = qualification;
     this._role = "Frontend разработчик";
+    this._qualification = qualification;
   }
 
   get organization() {
@@ -95,7 +74,7 @@ class FrontendDev extends Worker {
   }
 
   set organization(organization) {
-    this.organization = organization;
+    this._organization = organization;
   }
 
   get startDate() {
@@ -103,7 +82,7 @@ class FrontendDev extends Worker {
   }
 
   set startDate(startDate) {
-    this.startDate = startDate;
+    this._startDate = startDate;
   }
 
   get qualification() {
@@ -111,25 +90,21 @@ class FrontendDev extends Worker {
   }
 
   set qualification(qualification) {
-    this.qualification = qualification;
+    this._qualification = qualification;
+  }
+
+  get role() {
+    return this._role;
   }
 }
 
 class BackendDev extends Worker {
-  constructor(
-    firstName,
-    lastName,
-    age,
-    hasChild,
-    organization,
-    startDate,
-    qualification
-  ) {
+  constructor(firstName, lastName, age, hasChild, organization, startDate, qualification) {
     super(firstName, lastName, age, hasChild);
     this._organization = organization;
     this._startDate = startDate;
-    this._qualification = qualification;
     this._role = "Backend разработчик";
+    this._qualification = qualification;
   }
 
   get organization() {
@@ -137,7 +112,7 @@ class BackendDev extends Worker {
   }
 
   set organization(organization) {
-    this.organization = organization;
+    this._organization = organization;
   }
 
   get startDate() {
@@ -145,7 +120,7 @@ class BackendDev extends Worker {
   }
 
   set startDate(startDate) {
-    this.startDate = startDate;
+    this._startDate = startDate;
   }
 
   get qualification() {
@@ -153,7 +128,11 @@ class BackendDev extends Worker {
   }
 
   set qualification(qualification) {
-    this.qualification = qualification;
+    this._qualification = qualification;
+  }
+
+  get role() {
+    return this._role;
   }
 }
 
@@ -172,30 +151,14 @@ saveBtn.addEventListener("click", (event) => {
       hasChild = true;
     }
 
-    let newWorker = {};
+    let newWorker = null;
 
     switch (roleSelect.value) {
       case "frontend":
-        newWorker = new FrontendDev(
-          firstName,
-          lastName,
-          age,
-          hasChild,
-          organization,
-          date,
-          qual
-        );
+        newWorker = new FrontendDev(firstName, lastName, age, hasChild, organization, date, qual);
         break;
       case "backend":
-        newWorker = new BackendDev(
-          firstName,
-          lastName,
-          age,
-          hasChild,
-          organization,
-          date,
-          qual
-        );
+        newWorker = new BackendDev(firstName, lastName, age, hasChild, organization, date, qual);
         break;
     }
 
@@ -227,34 +190,15 @@ const renderTable = () => {
       row.appendChild(cell);
     });
 
-    const roleCell = document.createElement("td");
-    switch (worker.constructor.name) {
-      case "FrontendDev":
-        roleCell.textContent = "Frontend разработчик";
-        break;
-      case "BackendDev":
-        roleCell.textContent = "Backend разработчик";
-        break;
-    }
-    row.appendChild(roleCell);
-
     const deleteCell = document.createElement("td");
     const deleteButton = document.createElement("button");
     deleteButton.textContent = "Удалить";
-    deleteButton.addEventListener("click", () => deleteRow(index));
+    deleteButton.addEventListener("click", () => worker.deleteWorker(index));
     deleteCell.appendChild(deleteButton);
     row.appendChild(deleteCell);
 
     tableBody.appendChild(row);
   });
-
-  console.log(workers);
-};
-
-const deleteRow = (index) => {
-  workers.splice(index, 1);
-  saveData();
-  renderTable();
 };
 
 const isNumber = (num) => {
@@ -311,11 +255,39 @@ const loadData = () => {
   const storedData = localStorage.getItem("Workers");
 
   if (storedData) {
-    workers = JSON.parse(storedData);
+    workers = JSON.parse(storedData).map((workerData) => {
+      let worker = null;
+
+      if (workerData._role === "Frontend разработчик") {
+        worker = new FrontendDev(
+          workerData._firstName,
+          workerData._lastName,
+          workerData._age,
+          workerData._hasChild,
+          workerData._organization,
+          workerData._startDate,
+          workerData._qualification
+        );
+      } else if (workerData._role === "Backend разработчик") {
+        worker = new BackendDev(
+          workerData._firstName,
+          workerData._lastName,
+          workerData._age,
+          workerData._hasChild,
+          workerData._organization,
+          workerData._startDate,
+          workerData._qualification
+        );
+      }
+
+      worker._role = workerData._role;
+
+      return worker;
+    });
     renderTable();
   }
 };
 
 loadData();
-// renderTable();
+
 // localStorage.clear();

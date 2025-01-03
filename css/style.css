@@ -60,6 +60,17 @@ body {
   align-items: center;
 }
 
+.checkbox {
+  position: relative;
+}
+
+.has-child-checkbox {
+  position: absolute;
+  left: 127px;
+  top: 3px;
+  width: 13px !important;
+}
+
 .form-group .checkbox input {
   margin-right: 10px;
 }
@@ -92,7 +103,6 @@ body {
   padding: 20px 30px;
   border-radius: 8px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  /* width: 100%; */
   margin-top: 10px;
 }
 
